@@ -78,10 +78,11 @@
           <!-- THEAD -->
          <thead>
   <tr>
-    <!-- First header cell: left radius + full border -->
+    <!-- Ticker -->
     <th
       class="th text-left py-2 px-4 bg-[#0E0F18] text-[#828DA4]
              border-t border-l border-b border-[#272A45] rounded-l-[8px]"
+      data-key="sym" data-type="string"
     >
       <span class="inline-flex items-center gap-1 font-normal text-base">
         Ticker
@@ -91,10 +92,11 @@
       </span>
     </th>
 
-    <!-- Middle cells: only top/bottom border (no left/right) -->
+    <!-- Price -->
     <th
       class="th text-right py-2 px-4 bg-[#0E0F18] text-[#828DA4]
              border-y border-[#272A45]"
+      data-key="price" data-type="number"
     >
       <span class="inline-flex items-center gap-1 font-normal text-base">
         Price
@@ -104,9 +106,11 @@
       </span>
     </th>
 
+    <!-- %Change -->
     <th
       class="th text-right py-2 px-4 bg-[#0E0F18] text-[#828DA4]
              border-y border-[#272A45]"
+      data-key="pct" data-type="number"
     >
       <span class="inline-flex items-center gap-1 font-normal text-base">
         %Change
@@ -116,10 +120,11 @@
       </span>
     </th>
 
-    <!-- Last header cell: right radius + full border, no left border -->
+    <!-- $Change -->
     <th
       class="th text-right py-2 px-4 bg-[#0E0F18] text-[#828DA4]
              border border-l-0 border-[#272A45] rounded-r-[8px]"
+      data-key="delta" data-type="number"
     >
       <span class="inline-flex items-center gap-1 font-normal text-base">
         $Change
@@ -130,7 +135,6 @@
     </th>
   </tr>
 </thead>
-
 
           <!-- TBODY (filled by JS) -->
           <tbody id="rows"  class=""></tbody>

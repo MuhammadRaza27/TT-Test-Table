@@ -128,9 +128,51 @@ function renderRows(list) {
   });
 }
 
+/* =========================
+   SORTING: design-safe block
+   ========================= */
+let sortState = { key: null, dir: "asc", type: "string" };
+
+function cmp(a, b, type, dir) {
+  let res = (type === "number")
+    ? ((Number(a) || 0) - (Number(b) || 0))
+    : String(a ?? "").localeCompare(String(b ?? ""), undefined, { sensitivity: "base" });
+  return dir === "asc" ? res : -res;
+}
+
+function getSortedData() {
+  const { key, dir, type } = sortState;
+  if (!key) return data.slice(); // no sort → original order copy
+  return data.slice().sort((r1, r2) => cmp(r1[key], r2[key], type, dir));
+}
+
+function wireHeaderSorting() {
+  const ths = document.querySelectorAll('thead th[data-key]');
+  ths.forEach((th) => {
+    th.addEventListener('click', () => {
+      const key  = th.dataset.key;
+      const type = th.dataset.type || 'string';
+
+      if (sortState.key === key) {
+        sortState.dir = (sortState.dir === 'asc') ? 'desc' : 'asc';
+      } else {
+        sortState.key = key;
+        sortState.type = type;
+        sortState.dir = (type === 'number') ? 'desc' : 'asc'; // sensible default
+      }
+
+      renderRows(getSortedData());
+    });
+  });
+}
+
 // --- DOM ready + init (loads Iconify first, then renders) ---
 (function start() {
-  const run = () => ensureIconify(() => { ensureTableSpacing(2); renderRows(data); });
+  const run = () => ensureIconify(() => {
+    ensureTableSpacing(2);
+    wireHeaderSorting();                 // 🔹 add
+    renderRows(getSortedData());         // 🔹 add (pehle renderRows(data) tha)
+  });
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", run);
   } else {

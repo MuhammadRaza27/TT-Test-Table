@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Markets Table</title>
+
+  <!-- Tailwind (CDN: install ki zaroorat nahi) -->
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
+
+<script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://code.iconify.design/iconify-icon/1.0.8/iconify-icon.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        container: { center: true, padding: "1rem" },
+        extend: {
+          colors: {
+            bg:   "#0E0F18",   /* page bg */
+            panel:"#121725",   /* card bg */
+            row:  "#171C2B",   /* subtle row hover bg */
+            line: "#1E2433",   /* dividers */
+            ink:  { DEFAULT:"#C7CFDC", soft:"#8D95A6" },
+            pos:  "#22C55E",
+            neg:  "#EF4444"
+          },
+          boxShadow: {
+            pane: "0 0 0 1px rgba(30,36,51,.8), 0 10px 30px rgba(0,0,0,.25)"
+          }
+        }
+      }
+    }
+  </script>
+<!-- add this in <head>, Tailwind script ke baad -->
+    
+
+  <!-- Small utility layer for pills/badges -->
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .chip { @apply inline-flex items-center rounded-full font-bold text-ink leading-[18px]; }
+      .th   { @apply   leading-[18px] whitespace-nowrap; }
+      .td   { @apply text-[14px] leading-[20px] text-ink whitespace-nowrap; }
+      .icon { @apply h-[24px] w-[24px] rounded-full flex items-center justify-center text-[12px] font-semibold; }
+      .cell { @apply px-2 py-1; }
+      .prizecell { @apply px-4 py-1 text-right text-base; }
+    .brand-dot{ @apply h-6 w-6 rounded-full ring-1 ring-white/10 inline-flex items-center justify-center overflow-hidden; }
+
+}
+  
+ body{
+    font-family: "Space Grotesk", Inter, ui-sans-serif, system-ui, sans-serif;
+
+  }
+ 
+  </style>
+</head>
+
+<body class="bg-bg text-ink font-inter">
+  <main class="container  py-6" >
+    <!-- “Table” heading (same vibe as screenshot) -->
+    <div class="text-ink/60 text-sm mb-2"></div>
+
+    <!-- Card -->
+    <section class="rounded-[12px] border border-[#1B1D30] border-line bg-[#0E0F18] shadow-pane overflow-hidden">
+      <!-- scroll wrapper so mobile pe horizontal scroll available -->
+       
+      <div class="overflow-x-auto  p-3">
+        <!-- min width force taa ke x-scroll aaye aur columns hamesha visible rahen -->
+<table id="grid" class="w-full border-separate [border-spacing:0_10px]">
+          <!-- <colgroup>
+            <col class="w-[46%] sm:w-[40%] md:w-[42%] lg:w-[46%]">
+            <col class="w-[22%] sm:w-[20%]">
+            <col class="w-[16%] sm:w-[20%]">
+            <col class="w-[16%] sm:w-[20%]">
+          </colgroup> -->
+
+          <!-- THEAD -->
+         <thead>
+  <tr>
+    <!-- First header cell: left radius + full border -->
+    <th
+      class="th text-left py-2 px-4 bg-[#0E0F18] text-[#828DA4]
+             border-t border-l border-b border-[#272A45] rounded-l-[8px]"
+    >
+      <span class="inline-flex items-center gap-1 font-normal text-base">
+        Ticker
+        <svg class="h-[12px] w-[12px] opacity-60" viewBox="0 0 24 24" fill="none">
+          <path d="M8 10l4-4 4 4M16 14l-4 4-4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </span>
+    </th>
+
+    <!-- Middle cells: only top/bottom border (no left/right) -->
+    <th
+      class="th text-right py-2 px-4 bg-[#0E0F18] text-[#828DA4]
+             border-y border-[#272A45]"
+    >
+      <span class="inline-flex items-center gap-1 font-normal text-base">
+        Price
+        <svg class="h-[12px] w-[12px] opacity-60" viewBox="0 0 24 24" fill="none">
+          <path d="M8 10l4-4 4 4M16 14l-4 4-4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </span>
+    </th>
+
+    <th
+      class="th text-right py-2 px-4 bg-[#0E0F18] text-[#828DA4]
+             border-y border-[#272A45]"
+    >
+      <span class="inline-flex items-center gap-1 font-normal text-base">
+        %Change
+        <svg class="h-[12px] w-[12px] opacity-60" viewBox="0 0 24 24" fill="none">
+          <path d="M8 10l4-4 4 4M16 14l-4 4-4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </span>
+    </th>
+
+    <!-- Last header cell: right radius + full border, no left border -->
+    <th
+      class="th text-right py-2 px-4 bg-[#0E0F18] text-[#828DA4]
+             border border-l-0 border-[#272A45] rounded-r-[8px]"
+    >
+      <span class="inline-flex items-center gap-1 font-normal text-base">
+        $Change
+        <svg class="h-[12px] w-[12px] opacity-60" viewBox="0 0 24 24" fill="none">
+          <path d="M8 10l4-4 4 4M16 14l-4 4-4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </span>
+    </th>
+  </tr>
+</thead>
+
+
+          <!-- TBODY (filled by JS) -->
+          <tbody id="rows"  class=""></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script src="main.js"></script>
+</body>
+</html>
